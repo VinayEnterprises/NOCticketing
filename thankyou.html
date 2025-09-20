@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You – Vinay Enterprises NOC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("https://vinayenterprises.co.in/assets/Wallpaper.png") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .logo {
+      max-width: 200px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #0073e6;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.1em;
+      margin: 10px 0;
+      color: #333;
+    }
+    ul {
+      text-align: left;
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 0;
+      list-style: none;
+    }
+    ul li {
+      margin: 8px 0;
+      font-size: 0.95em;
+    }
+    .note {
+      margin-top: 30px;
+      font-size: 0.9em;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="card">
+      <img src="https://vinayenterprises.co.in/assets/img/logo.jpg" alt="Vinay Enterprises Logo" class="logo">
+
+      <h1>Thank You!</h1>
+      <p id="greeting">Your request has been submitted successfully.</p>
+      <p id="ticketInfo"></p>
+
+      <p><strong>What’s next?</strong></p>
+      <p>You will receive an email confirmation with your Case ID and request details shortly.</p>
+
+      <ul>
+        <li><strong>SEV1:</strong> Response within 15 minutes</li>
+        <li><strong>SEV2:</strong> Response within 30 minutes</li>
+        <li><strong>SEV3:</strong> Response within 4 hours</li>
+        <li><strong>SEV4:</strong> Response within 1 business day</li>
+      </ul>
+
+      <p class="note">For urgent issues, please contact our NOC hotline:<br>
+      <strong>+91-XXXXXXXXXX</strong></p>
+    </div>
+  </div>
+
+  <script>
+    // Parse query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const caseId = urlParams.get('caseId');
+
+    // Personalize the greeting
+    if (name) {
+      document.getElementById('greeting').innerText = `Hello ${name}, your request has been submitted successfully.`;
+    }
+
+    // Show Case ID
+    if (caseId) {
+      document.getElementById('ticketInfo').innerText = `Your Case ID is: ${caseId}`;
+    }
+  </script>
+</body>
+</html>
