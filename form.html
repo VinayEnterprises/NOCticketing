@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NOC Ticket Form</title>
+</head>
+<body>
+  <h1>Raise a Ticket</h1>
+
+  <form id="ticketForm" action="https://formspree.io/f/mnqropjk" method="POST">
+    <!-- Request Type -->
+    <label for="requestType">Request Type *</label>
+    <select id="requestType" name="requestType" required>
+      <option value="">-- Select --</option>
+      <option value="FCR">Fresh Configuration Request</option>
+      <option value="CR">Change Request</option>
+      <option value="IRR">Incident Reported</option>
+      <option value="RMA">RMA Request</option>
+    </select>
+
+    <!-- Device Make -->
+    <label>Device Make *</label>
+    <input type="text" name="deviceMake" required>
+
+    <!-- Device Model -->
+    <label>Device Model *</label>
+    <input type="text" name="deviceModel" required>
+
+    <!-- Device Serial -->
+    <label>Device Serial No *</label>
+    <input type="text" name="deviceSerial" required>
+
+    <!-- Hidden Case ID field -->
+    <input type="hidden" id="case_id" name="case_id">
+
+    <!-- Submit -->
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- Where we show the Case ID -->
+  <div id="caseIdDisplay"></div>
+
+  <script>
+    const form = document.getElementById('ticketForm');
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault(); // stop default submit
+
+      // Get request type
+      const type = document.getElementById('requestType').value;
+      if (!type) {
+        alert('Please select request type');
+        return;
+      }
+
+      try {
+        // Call your Netlify function
+        const res = await fetch('/.netlify/functions/mint-id', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type })
+        });
+        const data = await res.json();
+
+        if (!data.caseId) throw new Error("No Case ID returned");
+
+        // Show Case ID on page
+        document.getElementById('caseIdDisplay').innerText = "Your Case ID: " + data.caseId;
+
+        // Add Case ID to hidden field
+        document.getElementById('case_id').value = data.caseId;
+
+        // Now submit form to Formspree
+        form.submit();
+
+      } catch (err) {
+        alert("Error generating Case ID: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
