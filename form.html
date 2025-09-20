@@ -8,6 +8,10 @@
   <h1>Raise a Ticket</h1>
 
   <form id="ticketForm" action="https://usebasin.com/f/2aebf3dfcc3b" method="POST">
+    <!-- Client Email -->
+    <label for="clientEmail">Your Email *</label>
+    <input type="email" id="clientEmail" name="clientEmail" required>
+
     <!-- Request Type -->
     <label for="requestType">Request Type *</label>
     <select id="requestType" name="requestType" required>
@@ -27,7 +31,7 @@
     <input type="text" name="deviceModel" required>
 
     <!-- Device Serial -->
-    <label>Device Serial No *</label>
+    <label>Device Serial *</label>
     <input type="text" name="deviceSerial" required>
 
     <!-- Hidden Case ID field -->
@@ -37,15 +41,14 @@
     <button type="submit">Submit</button>
   </form>
 
-  <!-- Where we show the Case ID -->
+  <!-- Case ID display -->
   <div id="caseIdDisplay"></div>
 
   <script>
     const form = document.getElementById('ticketForm');
     form.addEventListener('submit', async function (e) {
-      e.preventDefault(); // stop default submit
+      e.preventDefault();
 
-      // Get request type
       const type = document.getElementById('requestType').value;
       if (!type) {
         alert('Please select request type');
@@ -53,7 +56,6 @@
       }
 
       try {
-        // Call your Netlify function
         const res = await fetch('/.netlify/functions/mint-id', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -63,13 +65,13 @@
 
         if (!data.caseId) throw new Error("No Case ID returned");
 
-        // Show Case ID on page
+        // Show Case ID
         document.getElementById('caseIdDisplay').innerText = "Your Case ID: " + data.caseId;
 
-        // Add Case ID to hidden field
+        // Add Case ID into hidden input
         document.getElementById('case_id').value = data.caseId;
 
-        // Now submit form to Formspree
+        // Submit form to Formspree
         form.submit();
 
       } catch (err) {
