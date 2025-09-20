@@ -2,49 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NOC Ticket Form</title>
+  <title>Raise a Ticket – Vinay Enterprises NOC</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("https://www.vinayenterprises.co.in//assets/Wallpaper.png") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+    }
+    .overlay {
+      background: rgba(0, 0, 0, 0.6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .form-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      text-align: left;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 200px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0073e6; /* Brand color */
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #333;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+    }
+    button {
+      background-color: #0073e6;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+    #caseIdDisplay {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.1em;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-  <h1>Raise a Ticket</h1>
+  <div class="overlay">
+    <div class="form-card">
+      <!-- Replace the logo link with your actual logo image URL -->
+      <img src="https://vinayenterprises.co.in/assets/img/logo.jpg" alt="Vinay Enterprises Logo" class="logo">
 
-  <form id="ticketForm" action="https://usebasin.com/f/2aebf3dfcc3b" method="POST">
-    <!-- Client Email -->
-    <label for="clientEmail">Your Email *</label>
-    <input type="email" id="clientEmail" name="clientEmail" required>
-    <!-- Client Name -->
-    <label for="clientName">Your Name *</label>
-    <input type="text" id="clientName" name="clientName" required>
-    <!-- Request Type -->
-    <label for="requestType">Request Type *</label>
-    <select id="requestType" name="requestType" required>
-      <option value="">-- Select --</option>
-      <option value="FCR">Fresh Configuration Request</option>
-      <option value="CR">Change Request</option>
-      <option value="IRR">Incident Reported</option>
-      <option value="RMA">RMA Request</option>
-    </select>
+      <h1>Raise a Ticket</h1>
 
-    <!-- Device Make -->
-    <label>Device Make *</label>
-    <input type="text" name="deviceMake" required>
+      <form id="ticketForm" action="https://usebasin.com/f/2aebf3dfcc3b" method="POST">
+        <!-- Client Name -->
+        <label for="clientName">Your Name *</label>
+        <input type="text" id="clientName" name="clientName" required>
 
-    <!-- Device Model -->
-    <label>Device Model *</label>
-    <input type="text" name="deviceModel" required>
+        <!-- Client Email -->
+        <label for="clientEmail">Your Email *</label>
+        <input type="email" id="clientEmail" name="clientEmail" required>
 
-    <!-- Device Serial -->
-    <label>Device Serial *</label>
-    <input type="text" name="deviceSerial" required>
+        <!-- Request Type -->
+        <label for="requestType">Request Type *</label>
+        <select id="requestType" name="requestType" required>
+          <option value="">-- Select --</option>
+          <option value="FCR">Fresh Configuration Request</option>
+          <option value="CR">Change Request</option>
+          <option value="IRR">Incident Reported</option>
+          <option value="RMA">RMA Request</option>
+        </select>
 
-    <!-- Hidden Case ID field -->
-    <input type="hidden" id="case_id" name="case_id">
+        <!-- Device Make -->
+        <label>Device Make *</label>
+        <input type="text" name="deviceMake" required>
 
-    <!-- Submit -->
-    <button type="submit">Submit</button>
-  </form>
+        <!-- Device Model -->
+        <label>Device Model *</label>
+        <input type="text" name="deviceModel" required>
 
-  <!-- Case ID display -->
-  <div id="caseIdDisplay"></div>
+        <!-- Device Serial -->
+        <label>Device Serial *</label>
+        <input type="text" name="deviceSerial" required>
+
+        <!-- Hidden Case ID field -->
+        <input type="hidden" id="case_id" name="case_id">
+
+        <!-- Submit -->
+        <button type="submit">Submit Ticket</button>
+      </form>
+
+      <div id="caseIdDisplay"></div>
+    </div>
+  </div>
 
   <script>
     const form = document.getElementById('ticketForm');
@@ -58,6 +135,7 @@
       }
 
       try {
+        // Call your Netlify function to mint Case ID
         const res = await fetch('/.netlify/functions/mint-id', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -67,13 +145,13 @@
 
         if (!data.caseId) throw new Error("No Case ID returned");
 
-        // Show Case ID
+        // Show Case ID on page
         document.getElementById('caseIdDisplay').innerText = "Your Case ID: " + data.caseId;
 
-        // Add Case ID into hidden input
+        // Add Case ID to hidden field
         document.getElementById('case_id').value = data.caseId;
 
-        // Submit form to Formspree
+        // Submit form to Basin
         form.submit();
 
       } catch (err) {
